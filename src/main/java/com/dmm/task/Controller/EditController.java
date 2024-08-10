@@ -31,7 +31,7 @@ public class EditController {
 	*/
 
 	// マッピング設定
-	@PostMapping("/editTask")
+	@PostMapping("/edit")
 	public String registerEdit(@Validated EditForm editForm, BindingResult bindingResult) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {

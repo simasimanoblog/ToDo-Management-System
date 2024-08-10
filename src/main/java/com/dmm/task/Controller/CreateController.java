@@ -31,7 +31,7 @@ public class CreateController {
 	*/
 
 	// マッピング設定
-	@PostMapping("/createTask")
+	@PostMapping("/create")
 	public String registerCreate(@Validated CreateForm createForm, BindingResult bindingResult) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {

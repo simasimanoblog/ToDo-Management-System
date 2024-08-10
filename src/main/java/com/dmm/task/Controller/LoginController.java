@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class LoginController {
 	// アノテーション付きのメソッド追加
-	@GetMapping("/loginForm")
+	@GetMapping("/login")
 	String loginForm() {
 		return "login";
 	}

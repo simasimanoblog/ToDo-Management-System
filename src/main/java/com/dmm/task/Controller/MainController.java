@@ -1,17 +1,12 @@
 package com.dmm.task.Controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.repository.TasksRepository;
-import com.dmm.task.form.CreateForm;
 
 //アノテーションを追加
 @Controller
@@ -26,6 +21,7 @@ public class MainController {
 		return "main";
 	}
 
+	/*
 	// アノテーション付きのメソッド追加
 	@GetMapping("/create")
 	String RegistForm(Model model) {
@@ -46,6 +42,7 @@ public class MainController {
 		// テンプレートは src/main/resources/templates/edit.html とします。
 		return "edit";
 	}
+	*/
 
 	// deleteTasksメソッドを追加
 	// リクエストマッピング設定を追加
