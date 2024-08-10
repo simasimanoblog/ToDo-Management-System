@@ -1,13 +1,9 @@
 package com.dmm.task.Controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.dmm.task.data.entity.Tasks;
@@ -21,6 +17,7 @@ public class CreateController {
 	@Autowired
 	private TasksRepository tasksRepository;
 
+	/*
 	// アノテーション付きのメソッド追加
 	@GetMapping("/create")
 	String RegistForm(Model model) {
@@ -31,9 +28,10 @@ public class CreateController {
 		// テンプレートは src/main/resources/templates/create.html とします。
 		return "create";
 	}
+	*/
 
 	// マッピング設定
-	@PostMapping("/create")
+	@PostMapping("/createTask")
 	public String registerCreate(@Validated CreateForm createForm, BindingResult bindingResult) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (bindingResult.hasErrors()) {
