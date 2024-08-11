@@ -1,6 +1,6 @@
 package com.dmm.task.form;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
@@ -22,7 +22,7 @@ public class EditForm {
 	@Column(columnDefinition = "DATE")
 	@NotBlank
 	@DateTimeFormat(pattern = "yyyy/MM/dd")
-	private LocalDateTime date;
+	private LocalDate date;
 
 	// nameへのバリデーション設定を追加
 	@Size(min = 1, max = 255)

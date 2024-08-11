@@ -1,12 +1,20 @@
 package com.dmm.task.Controller;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.dmm.task.data.entity.TasksDto;
 import com.dmm.task.data.repository.TasksRepository;
+import com.dmm.task.service.TaskService;
 
 //アノテーションを追加
 @Controller
@@ -15,12 +23,28 @@ public class MainController {
 	@Autowired
 	private TasksRepository tasksRepository;
 
-	// アノテーション付きのメソッド追加
-	@GetMapping("/main")
-	String MainForm() {
-		return "main";
+	private final TaskService taskService;
+
+	public MainController(TaskService taskService) {
+		this.taskService = taskService;
 	}
 
+	@GetMapping("/main")
+    public String getCalendar(@RequestParam(value = "date", required = false) String date, Model model) {
+        LocalDate currentDate = date != null ? LocalDate.parse(date) : LocalDate.now();
+        List<List<LocalDate>> calendarMatrix = taskService.generateCalendar(currentDate);
+
+        model.addAttribute("matrix", calendarMatrix);
+        model.addAttribute("month", currentDate.getMonth());
+        model.addAttribute("prev", currentDate.minusMonths(1).withDayOfMonth(1));
+        model.addAttribute("next", currentDate.plusMonths(1).withDayOfMonth(1));
+
+        // タスクデータを日付ごとにグループ化してMapに格納
+        Map<LocalDate, List<TasksDto>> tasks = taskService.getTasksForMonth(currentDate);
+        model.addAttribute("tasks", tasks);
+
+        return "main";
+	}
 	/*
 	// アノテーション付きのメソッド追加
 	@GetMapping("/create")
