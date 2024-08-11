@@ -9,6 +9,6 @@ import com.dmm.task.data.entity.Tasks;
 
 public interface TasksRepository extends JpaRepository<Tasks, Long> {
 
-    List<Tasks> findByDueDateBetween(LocalDate startDate, LocalDate endDate);
+    List<Tasks> findByDateBetween(LocalDate startDate, LocalDate endDate);
 
 }

@@ -1,6 +1,7 @@
 package com.dmm.task.Controller;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.entity.TasksDto;
 import com.dmm.task.data.repository.TasksRepository;
 import com.dmm.task.service.TaskService;
@@ -32,10 +34,14 @@ public class MainController {
 	@GetMapping("/main")
     public String getCalendar(@RequestParam(value = "date", required = false) String date, Model model) {
         LocalDate currentDate = date != null ? LocalDate.parse(date) : LocalDate.now();
-        List<List<LocalDate>> calendarMatrix = taskService.generateCalendar(currentDate);
+        List<List<LocalDate>> calendar = taskService.generateCalendar(currentDate);
 
-        model.addAttribute("matrix", calendarMatrix);
-        model.addAttribute("month", currentDate.getMonth());
+        // 日付を「yyyy年MM月」の形式でフォーマット
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月");
+        String formattedMonth = currentDate.format(formatter);
+
+        model.addAttribute("matrix", calendar);
+        model.addAttribute("month", formattedMonth);
         model.addAttribute("prev", currentDate.minusMonths(1).withDayOfMonth(1));
         model.addAttribute("next", currentDate.plusMonths(1).withDayOfMonth(1));
 
@@ -45,6 +51,14 @@ public class MainController {
 
         return "main";
 	}
+	
+    public TasksDto convertToDto(Tasks task) {
+        return new TasksDto(task.getId(), task.getTitle(), task.getName(), task.getText(), task.getDate(), task.getDone());
+    }
+
+    public Tasks convertToEntity(TasksDto taskDto) {
+        return new Tasks(taskDto.getId(), taskDto.getTitle(), taskDto.getName(), taskDto.getText(), taskDto.getDate(), taskDto.getDone());
+    }
 	/*
 	// アノテーション付きのメソッド追加
 	@GetMapping("/create")

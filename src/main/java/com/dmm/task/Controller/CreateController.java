@@ -1,10 +1,15 @@
 package com.dmm.task.Controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.repository.TasksRepository;
@@ -17,19 +22,21 @@ public class CreateController {
 	@Autowired
 	private TasksRepository tasksRepository;
 
-	/*
 	// アノテーション付きのメソッド追加
-	@GetMapping("/create")
-	String RegistForm(Model model) {
-		// ユーザーリスト取得処理を追加
-		List<Tasks> tasks = tasksRepository.findAll();
-		// 取得したリストをテンプレートに渡す
-		model.addAttribute("tasks", tasks);
-		// テンプレートは src/main/resources/templates/create.html とします。
+	@GetMapping("/main/create")
+	String showCreateForm(@RequestParam("date") LocalDate date, Model model) {
+		Tasks tasks = new Tasks();
+		tasks.setDate(date);
+		// データベースに保存
+		tasksRepository.save(tasks);
+				
+		// 必要に応じて、新しいタスクのデフォルト値などをセットする
+		//model.addAttribute("date", date);
+		//model.addAttribute("task", new Tasks());  // TaskDtoはフォームのデータバインド用
+        // テンプレートは src/main/resources/templates/create.html とします。
 		return "create";
 	}
-	*/
-
+	
 	// マッピング設定
 	@PostMapping("/create")
 	public String registerCreate(@Validated CreateForm createForm, BindingResult bindingResult) {
