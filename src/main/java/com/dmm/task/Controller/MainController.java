@@ -81,16 +81,17 @@ public class MainController {
     public Tasks convertToEntity(TasksDto taskDto) {
         return new Tasks(taskDto.getId(), taskDto.getTitle(), taskDto.getName(), taskDto.getText(), taskDto.getDate(), taskDto.getDone());
     }
+    
 	/*
-	// アノテーション付きのメソッド追加
-	@GetMapping("/create")
-	String RegistForm(Model model) {
-		// Modelに空のUserFormを追加
-		CreateForm createForm = new CreateForm();
-		model.addAttribute("createForm", createForm);
-		// テンプレートは src/main/resources/templates/create.html とします。
-		return "create";
-	}
+    // アノテーション付きのメソッド追加
+ 	@GetMapping("/main/create/{date}")
+ 	String RegistForm(Model model, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+ 		// Modelに空のUserFormを追加
+ 		CreateForm createForm = new CreateForm();
+ 		model.addAttribute("createForm", createForm);
+ 		// テンプレートは src/main/resources/templates/create.html とします。
+ 		return "create";
+ 	}
 
 	// アノテーション付きのメソッド追加
 	@GetMapping("/edit")

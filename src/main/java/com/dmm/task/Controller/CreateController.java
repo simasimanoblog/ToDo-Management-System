@@ -2,9 +2,10 @@ package com.dmm.task.Controller;
 
 import java.time.LocalDate;
 
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.entity.Users;
 import com.dmm.task.data.repository.TasksRepository;
 import com.dmm.task.form.CreateForm;
+import com.dmm.task.service.AccountUserDetails;
 
 //アノテーションを追加
 @Controller
@@ -26,8 +28,8 @@ public class CreateController {
 	private TasksRepository tasksRepository;
 
 	@GetMapping("/main/create/{date}")
-	public String showCreateForm(@PathVariable("date") String dateStr, Model model) {
-		LocalDate date = LocalDate.parse(dateStr);
+	public String showCreateForm(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
+		//LocalDate date = LocalDate.parse(dateStr);
 		model.addAttribute("date", date);
 		model.addAttribute("task", new CreateForm());
 		return "create"; // createTaskForm.html にレンダリング
@@ -35,33 +37,29 @@ public class CreateController {
 
 	// マッピング設定
 	@PostMapping("/main/create")
-	public String registerCreate(HttpSession session, @ModelAttribute("task") CreateForm createForm,
+	public String registerCreate(@ModelAttribute("task") CreateForm createForm,
 			BindingResult result, Model model) {
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (result.hasErrors()) {
 			// エラーがある場合は編集画面を返す
 			return "create";
 		}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		AccountUserDetails userDetails = (AccountUserDetails) auth.getPrincipal();
+        Users loginUser = userDetails.getUser();
 
-		// セッションからログインユーザー情報を取得
-		Users loginUser = (Users) session.getAttribute("LoginUser");
-		if (loginUser != null) {
 
-			Tasks tasks = new Tasks();
-			tasks.setTitle(createForm.getTitle());
-			tasks.setDate(createForm.getDate());
-			tasks.setName(loginUser.getName());
-			tasks.setText(createForm.getText());
-			tasks.setDone(false);
+		Tasks tasks = new Tasks();
+		tasks.setTitle(createForm.getTitle());
+		tasks.setDate(createForm.getDate());
+		tasks.setName(loginUser.getName());
+		tasks.setText(createForm.getText());
+		tasks.setDone(false);
 
-			// データベースに保存
-			tasksRepository.save(tasks);
-			// ユーザ一覧画面へリダイレクト
-			return "redirect:/main";
-		} else {
-			return "create"; // セッション切れ等でログインページにリダイレクト
-		}
-
+		// データベースに保存
+		tasksRepository.save(tasks);
+		// ユーザ一覧画面へリダイレクト
+		return "redirect:/main";
 	}
 
 }
