@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
@@ -24,11 +23,11 @@
 		<div class="form sd">
 			<div class="title sd">Regist</div>
 			<div class="form_box sd">
-				<form method="post" th:action="@{/main/create}">
+				<form method="post" th:action="@{/main/create}" th:object="${task}">
 					<div class="form_row sd">
 						<p class="form_text sd">タイトル：</p>
 						<div class="form_item">
-							<input type="text" name="title" class="item">
+							<input type="text" name="title" class="item" th:field="*{title}" />
 							<!-- バリデーションエラーメッセージ表示 -->
 							<span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
 						</div>
@@ -36,8 +35,9 @@
 					<div class="form_row sd">
 						<p class="form_text sd">日付：</p>
 						<div class="form_item">
-							<input type="date" name="date"
-								th:value="${#temporals.format(date, 'yyyy-MM-dd')}" class="item">
+							<input type="date" name="date" class="item" 
+									th:field="*{date}"
+									th:value="${#temporals.format(date, 'yyyy-MM-dd')}" />
 							<!-- バリデーションエラーメッセージ表示 -->
 							<span th:if="${#fields.hasErrors('date')}" th:errors="*{date}"></span>
 						</div>
@@ -45,7 +45,8 @@
 					<div class="form_row sd">
 						<p class="form_text sd">内容:</p>
 						<div class="form_item">
-							<textarea name="text" cols="80" rows="10" class="item"></textarea>
+							<textarea name="text" cols="80" rows="10" class="item"
+								th:field="*{text}"></textarea>
 						</div>
 					</div>
 					<button class="form_button sd">
@@ -57,4 +58,3 @@
 	</div>
 </body>
 </html>
-

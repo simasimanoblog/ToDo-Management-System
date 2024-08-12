@@ -10,7 +10,10 @@ public class TasksDto {
 	private String text;
 	private LocalDate date;
 	private Boolean done;
-	
+
+	public TasksDto() {
+		// TODO 自動生成されたコンストラクター・スタブ
+	}
 	public TasksDto(Long id, String title, String name, String text, LocalDate date, Boolean done) {
         this.id = id;
         this.title = title;

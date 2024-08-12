@@ -29,7 +29,7 @@ public class Tasks {
         this.id = id;
         this.title = title;
         this.name = name;
-        this.name = text;
+        this.text = text;
         this.date = date;
         this.done = done;
     }

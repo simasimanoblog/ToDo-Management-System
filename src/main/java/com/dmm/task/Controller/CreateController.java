@@ -2,16 +2,19 @@ package com.dmm.task.Controller;
 
 import java.time.LocalDate;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dmm.task.data.entity.Tasks;
+import com.dmm.task.data.entity.Users;
 import com.dmm.task.data.repository.TasksRepository;
 import com.dmm.task.form.CreateForm;
 
@@ -22,40 +25,43 @@ public class CreateController {
 	@Autowired
 	private TasksRepository tasksRepository;
 
-	// アノテーション付きのメソッド追加
-	@GetMapping("/main/create")
-	String showCreateForm(@RequestParam("date") LocalDate date, Model model) {
-		Tasks tasks = new Tasks();
-		tasks.setDate(date);
-		// データベースに保存
-		tasksRepository.save(tasks);
-				
-		// 必要に応じて、新しいタスクのデフォルト値などをセットする
-		//model.addAttribute("date", date);
-		//model.addAttribute("task", new Tasks());  // TaskDtoはフォームのデータバインド用
-        // テンプレートは src/main/resources/templates/create.html とします。
-		return "create";
+	@GetMapping("/main/create/{date}")
+	public String showCreateForm(@PathVariable("date") String dateStr, Model model) {
+		LocalDate date = LocalDate.parse(dateStr);
+		model.addAttribute("date", date);
+		model.addAttribute("task", new CreateForm());
+		return "create"; // createTaskForm.html にレンダリング
 	}
-	
+
 	// マッピング設定
-	@PostMapping("/create")
-	public String registerCreate(@Validated CreateForm createForm, BindingResult bindingResult) {
+	@PostMapping("/main/create")
+	public String registerCreate(HttpSession session, @ModelAttribute("task") CreateForm createForm,
+			BindingResult result, Model model) {
 		// バリデーションの結果、エラーがあるかどうかチェック
-		if (bindingResult.hasErrors()) {
+		if (result.hasErrors()) {
 			// エラーがある場合は編集画面を返す
 			return "create";
 		}
-		Tasks tasks = new Tasks();
-		tasks.setTitle(createForm.getTitle());
-		tasks.setDate(createForm.getDate());
-		tasks.setName(createForm.getName());
-		tasks.setText(createForm.getText());
 
-		// データベースに保存
-		tasksRepository.save(tasks);
-		// ユーザ一覧画面へリダイレクト
-		return "redirect:/main";
+		// セッションからログインユーザー情報を取得
+		Users loginUser = (Users) session.getAttribute("LoginUser");
+		if (loginUser != null) {
+
+			Tasks tasks = new Tasks();
+			tasks.setTitle(createForm.getTitle());
+			tasks.setDate(createForm.getDate());
+			tasks.setName(loginUser.getName());
+			tasks.setText(createForm.getText());
+			tasks.setDone(false);
+
+			// データベースに保存
+			tasksRepository.save(tasks);
+			// ユーザ一覧画面へリダイレクト
+			return "redirect:/main";
+		} else {
+			return "create"; // セッション切れ等でログインページにリダイレクト
+		}
 
 	}
-	
+
 }

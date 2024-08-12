@@ -52,6 +52,28 @@ public class MainController {
         return "main";
 	}
 	
+
+	//// アノテーション付きのメソッド追加
+	//@GetMapping("/main/create")
+	//String showCreateForm(@RequestParam("date") LocalDate date, Model model) {
+	//	Tasks tasks = new Tasks();
+	//	tasks.setDate(date);
+	//	// データベースに保存
+	//	model.addAttribute("task", tasks);
+	//   // テンプレートは src/main/resources/templates/create.html とします。
+	//	return "create";
+	//}
+
+	//@PostMapping("/main/create")
+	//public String createTask(@Valid @ModelAttribute("task") Tasks task, BindingResult result, Model model) {
+	//    if (result.hasErrors()) {
+	//        return "create";
+	//    }
+	//    tasksRepository.save(task); // タスクをデータベースに保存
+	//    // タスクの保存処理など
+	//    return "redirect:/main";
+	//}
+    
     public TasksDto convertToDto(Tasks task) {
         return new TasksDto(task.getId(), task.getTitle(), task.getName(), task.getText(), task.getDate(), task.getDone());
     }

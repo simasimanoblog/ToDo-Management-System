@@ -20,11 +20,11 @@ public class CreateForm {
 
 	// dateへのバリデーション設定を追加
 	@NotBlank
-	@DateTimeFormat(pattern = "yyyy/MM/dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	//@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate date;
 	
 	// nameへのバリデーション設定を追加
-	@Size(min = 1, max = 255)
 	private String name;
 
 	// textへのバリデーション設定を追加
