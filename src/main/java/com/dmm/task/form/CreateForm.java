@@ -1,9 +1,9 @@
 package com.dmm.task.form;
 
-
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,11 +19,11 @@ public class CreateForm {
 	private String title;
 
 	// dateへのバリデーション設定を追加
-	@NotBlank
+	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	//@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+	// @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
 	private LocalDate date;
-	
+
 	// nameへのバリデーション設定を追加
 	private String name;
 

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dmm.task.data.entity.Tasks;
-import com.dmm.task.data.entity.TasksDto;
 import com.dmm.task.data.repository.TasksRepository;
 import com.dmm.task.service.TaskService;
 
@@ -25,14 +24,14 @@ public class MainController {
 	private TasksRepository tasksRepository;
 
 	private final TaskService taskService;
-
 	public MainController(TaskService taskService) {
 		this.taskService = taskService;
 	}
 
 	@GetMapping("/main")
     public String getCalendar(@RequestParam(value = "date", required = false) String date, Model model) {
-        LocalDate currentDate = date != null ? LocalDate.parse(date) : LocalDate.now();
+        // 日付が設定されていない場合は"今日"の日付を適用
+		LocalDate currentDate = date != null ? LocalDate.parse(date) : LocalDate.now();
         List<List<LocalDate>> calendar = taskService.generateCalendar(currentDate);
 
         // 日付を「yyyy年MM月」の形式でフォーマット
@@ -46,21 +45,8 @@ public class MainController {
         model.addAttribute("month", formattedMonth);
         model.addAttribute("prev", currentDate.minusMonths(1).withDayOfMonth(1));
         model.addAttribute("next", currentDate.plusMonths(1).withDayOfMonth(1));
-
-        // タスクデータを日付ごとにグループ化してMapに格納
-        //Map<LocalDate, List<TasksDto>> tasks = taskService.getTasksForMonth(currentDate);
         model.addAttribute("tasks", tasks);
 
         return "main";
 	}
-	
-   
-    public TasksDto convertToDto(Tasks task) {
-        return new TasksDto(task.getId(), task.getTitle(), task.getName(), task.getText(), task.getDate(), task.getDone());
-    }
-
-    public Tasks convertToEntity(TasksDto taskDto) {
-        return new Tasks(taskDto.getId(), taskDto.getTitle(), taskDto.getName(), taskDto.getText(), taskDto.getDate(), taskDto.getDone());
-    }
-
 }

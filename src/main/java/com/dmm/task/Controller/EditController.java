@@ -1,7 +1,5 @@
 package com.dmm.task.Controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dmm.task.data.entity.Tasks;
 import com.dmm.task.data.entity.Users;
@@ -32,7 +31,6 @@ public class EditController {
 		//idに該当するタスクが存在する場合は変数に退避
 		Tasks task = tasksRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid task Id:" + id));
-
 		//パラメータ.id
 		model.addAttribute("id", id);
 		//DB.タイトル
@@ -47,12 +45,14 @@ public class EditController {
 		model.addAttribute("done", task.getDone());
 		//タスク
 		model.addAttribute("task", task);
-		return "edit"; // edit.html にレンダリング
+		// edit.html にレンダリング
+		return "edit"; 
 	}
 
 	// マッピング設定
 	@PostMapping("/main/edit/{id}")
-	public String updateTask(@Valid @ModelAttribute("task") EditForm editForm, BindingResult result, Model model) {
+	public String updateTask(@ModelAttribute("task") EditForm editForm, BindingResult result, Model model, @RequestParam(name = "done", required = false) Boolean done) {
+		
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (result.hasErrors()) {
 			// エラーがある場合は編集画面を返す
@@ -76,16 +76,16 @@ public class EditController {
 		// 画面.内容
 		tasks.setText(editForm.getText());
 		// 画面.実行フラグ
-		tasks.setDone(editForm.getDone());
+		//tasks.setDone(done);
+		tasks.setDone(done != null ? done : false); // doneがnullの場合はfalseに設定
 
 		// データベースに保存
 		tasksRepository.save(tasks);
-		// ユーザ一覧画面へリダイレクト
+		
+		// カレンダ画面へリダイレクト
 		return "redirect:/main";
-
 	}
 	
-
 	// deleteTasksメソッドを追加
 	// リクエストマッピング設定を追加
 	@PostMapping("/main/delete/{id}")

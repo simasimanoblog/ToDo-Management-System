@@ -12,6 +12,4 @@ public class LoginController {
 	String loginForm(Model model) {
 		return "login";
 	}
-	
-	
 }

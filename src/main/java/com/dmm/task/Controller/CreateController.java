@@ -32,7 +32,8 @@ public class CreateController {
 		//パラメータ.日付を初期値としてセット
 		model.addAttribute("date", date);
 		model.addAttribute("task", new CreateForm());
-		return "create"; // create.html にレンダリング
+		// create.html にレンダリング
+		return "create"; 
 	}
 
 	// マッピング設定
@@ -49,7 +50,6 @@ public class CreateController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		AccountUserDetails userDetails = (AccountUserDetails) auth.getPrincipal();
         Users loginUser = userDetails.getUser();
-
     	//タスク
 		Tasks tasks = new Tasks();
 		//画面.タイトル
@@ -69,5 +69,4 @@ public class CreateController {
 		// カレンダ画面へリダイレクト
 		return "redirect:/main";
 	}
-
 }

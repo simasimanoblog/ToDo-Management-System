@@ -3,14 +3,10 @@ package com.dmm.task.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.dmm.task.data.entity.Tasks;
-import com.dmm.task.data.entity.TasksDto;
 import com.dmm.task.data.repository.TasksRepository;
 
 @Service
@@ -50,30 +46,10 @@ public class TaskService {
             // 現在の月末かつ日曜日ならループを抜ける
             if (targetDate.isAfter(currentDate.withDayOfMonth(currentDate.lengthOfMonth())) &&
         		targetDate.getDayOfWeek() == DayOfWeek.SUNDAY) {
-                //weekList.add(targetDate);
-            	//calendar.add(weekList);
                 break;
             }
         }
 		
 		return calendar;
-	}
-
-	public Map<LocalDate, List<TasksDto>> getTasksForMonth(LocalDate currentDate) {
-		List<Tasks> tasks = taskRepository.findByDateBetween(currentDate.withDayOfMonth(1),
-				currentDate.withDayOfMonth(currentDate.lengthOfMonth()));
-
-		Map<LocalDate, List<TasksDto>> taskMap = new HashMap<>();
-		for (Tasks task : tasks) {
-			LocalDate date = task.getDate();
-			taskMap.computeIfAbsent(date, k -> new ArrayList<>()).add(convertToDto(task));
-		}
-
-		return taskMap;
-	}
-
-	private TasksDto convertToDto(Tasks task) {
-		return new TasksDto(task.getId(), task.getTitle(), task.getName(), task.getText(), task.getDate(),
-				task.getDone());
 	}
 }
