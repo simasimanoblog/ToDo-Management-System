@@ -33,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// 認可の設定
-
 		http.authorizeRequests().antMatchers("/login").permitAll() // loginは、全ユーザからのアクセスを許可
 				.anyRequest().authenticated(); // loginForm以外は、認証を求める
 

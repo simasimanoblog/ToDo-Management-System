@@ -57,7 +57,7 @@ public class CreateController {
 		//画面.タイトル
 		tasks.setDate(createForm.getDate());
 		//ログインユーザー.名前
-		tasks.setName(loginUser.getName());
+		tasks.setName(loginUser.getUserName());
 		//画面.内容
 		tasks.setText(createForm.getText());
 		//画面.実行フラグ

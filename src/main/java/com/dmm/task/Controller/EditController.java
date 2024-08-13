@@ -72,7 +72,7 @@ public class EditController {
 		// 画面.タイトル
 		tasks.setDate(editForm.getDate());
 		// ログインユーザー.名前
-		tasks.setName(loginUser.getName());
+		tasks.setName(loginUser.getUserName());
 		// 画面.内容
 		tasks.setText(editForm.getText());
 		// 画面.実行フラグ

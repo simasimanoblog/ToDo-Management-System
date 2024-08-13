@@ -25,15 +25,6 @@ public class Tasks {
 	private LocalDate date;
 	private Boolean done;
 
-	public Tasks(Long id, String title, String name, String text, LocalDate date, Boolean done) {
-        this.id = id;
-        this.title = title;
-        this.name = name;
-        this.text = text;
-        this.date = date;
-        this.done = done;
-    }
-
 	public Tasks() {
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
