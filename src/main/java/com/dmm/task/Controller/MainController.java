@@ -48,10 +48,11 @@ public class MainController {
 		boolean isAdmin = authentication.getAuthorities().stream()
 				.anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")); 
 
-		//カレンダのfrom～to
-		LocalDate fromDate = currentDate.minusMonths(1).withDayOfMonth(1);
-		LocalDate toDate = currentDate.plusMonths(1).withDayOfMonth(1).minusDays(1);
-		
+		//カレンダのfrom～to 
+		//※データの取得範囲を当月月初～月末の±１wとする
+		LocalDate fromDate = currentDate.withDayOfMonth(1).minusWeeks(1);
+		LocalDate toDate = currentDate.plusMonths(1).withDayOfMonth(1).minusDays(1).plusWeeks(1);
+			
 		List<Tasks> tasks;
 		//権限が管理者かどうかで分岐
 		if (isAdmin) {
