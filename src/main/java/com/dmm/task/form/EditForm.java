@@ -13,6 +13,8 @@ import lombok.Data;
 @Data
 public class EditForm {
 
+	private Long id; // IDプロパティを追加
+
 	// titleへのバリデーション設定を追加
 	@NotBlank
 	@Size(min = 1, max = 255)

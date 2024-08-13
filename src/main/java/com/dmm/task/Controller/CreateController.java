@@ -29,36 +29,44 @@ public class CreateController {
 
 	@GetMapping("/main/create/{date}")
 	public String showCreateForm(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
-		//LocalDate date = LocalDate.parse(dateStr);
+		//パラメータ.日付を初期値としてセット
 		model.addAttribute("date", date);
 		model.addAttribute("task", new CreateForm());
-		return "create"; // createTaskForm.html にレンダリング
+		return "create"; // create.html にレンダリング
 	}
 
 	// マッピング設定
 	@PostMapping("/main/create")
-	public String registerCreate(@ModelAttribute("task") CreateForm createForm,
-			BindingResult result, Model model) {
+	public String registerCreate(@ModelAttribute("task") CreateForm createForm, BindingResult result, Model model) {
+		
 		// バリデーションの結果、エラーがあるかどうかチェック
 		if (result.hasErrors()) {
-			// エラーがある場合は編集画面を返す
+			// エラーがある場合は登録画面を返す
 			return "create";
 		}
+
+		//ログインユーザー情報
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		AccountUserDetails userDetails = (AccountUserDetails) auth.getPrincipal();
         Users loginUser = userDetails.getUser();
 
-
+    	//タスク
 		Tasks tasks = new Tasks();
+		//画面.タイトル
 		tasks.setTitle(createForm.getTitle());
+		//画面.タイトル
 		tasks.setDate(createForm.getDate());
+		//ログインユーザー.名前
 		tasks.setName(loginUser.getName());
+		//画面.内容
 		tasks.setText(createForm.getText());
+		//画面.実行フラグ
 		tasks.setDone(false);
 
 		// データベースに保存
 		tasksRepository.save(tasks);
-		// ユーザ一覧画面へリダイレクト
+		
+		// カレンダ画面へリダイレクト
 		return "redirect:/main";
 	}
 

@@ -4,13 +4,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.dmm.task.data.entity.Tasks;
@@ -40,40 +39,22 @@ public class MainController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月");
         String formattedMonth = currentDate.format(formatter);
 
+        Map<LocalDate, List<Tasks>> tasks = tasksRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Tasks::getDate));
+        
         model.addAttribute("matrix", calendar);
         model.addAttribute("month", formattedMonth);
         model.addAttribute("prev", currentDate.minusMonths(1).withDayOfMonth(1));
         model.addAttribute("next", currentDate.plusMonths(1).withDayOfMonth(1));
 
         // タスクデータを日付ごとにグループ化してMapに格納
-        Map<LocalDate, List<TasksDto>> tasks = taskService.getTasksForMonth(currentDate);
+        //Map<LocalDate, List<TasksDto>> tasks = taskService.getTasksForMonth(currentDate);
         model.addAttribute("tasks", tasks);
 
         return "main";
 	}
 	
-
-	//// アノテーション付きのメソッド追加
-	//@GetMapping("/main/create")
-	//String showCreateForm(@RequestParam("date") LocalDate date, Model model) {
-	//	Tasks tasks = new Tasks();
-	//	tasks.setDate(date);
-	//	// データベースに保存
-	//	model.addAttribute("task", tasks);
-	//   // テンプレートは src/main/resources/templates/create.html とします。
-	//	return "create";
-	//}
-
-	//@PostMapping("/main/create")
-	//public String createTask(@Valid @ModelAttribute("task") Tasks task, BindingResult result, Model model) {
-	//    if (result.hasErrors()) {
-	//        return "create";
-	//    }
-	//    tasksRepository.save(task); // タスクをデータベースに保存
-	//    // タスクの保存処理など
-	//    return "redirect:/main";
-	//}
-    
+   
     public TasksDto convertToDto(Tasks task) {
         return new TasksDto(task.getId(), task.getTitle(), task.getName(), task.getText(), task.getDate(), task.getDone());
     }
@@ -81,38 +62,5 @@ public class MainController {
     public Tasks convertToEntity(TasksDto taskDto) {
         return new Tasks(taskDto.getId(), taskDto.getTitle(), taskDto.getName(), taskDto.getText(), taskDto.getDate(), taskDto.getDone());
     }
-    
-	/*
-    // アノテーション付きのメソッド追加
- 	@GetMapping("/main/create/{date}")
- 	String RegistForm(Model model, @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
- 		// Modelに空のUserFormを追加
- 		CreateForm createForm = new CreateForm();
- 		model.addAttribute("createForm", createForm);
- 		// テンプレートは src/main/resources/templates/create.html とします。
- 		return "create";
- 	}
-
-	// アノテーション付きのメソッド追加
-	@GetMapping("/edit")
-	String EditForm(Model model) {
-		// ユーザーリスト取得処理を追加
-		List<Tasks> tasks = tasksRepository.findAll();
-		// 取得したリストをテンプレートに渡す
-		model.addAttribute("tasks", tasks);
-		// テンプレートは src/main/resources/templates/edit.html とします。
-		return "edit";
-	}
-	*/
-
-	// deleteTasksメソッドを追加
-	// リクエストマッピング設定を追加
-	@PostMapping("/main/delete/{id}")
-	// 処理の中でidを使えるように、引数にidを追加
-	public String deleteTasks(@PathVariable Long id) {
-		// 指定したIDのユーザーを削除
-		tasksRepository.deleteById(id);
-		return "redirect:/main";
-	}
 
 }
