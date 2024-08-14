@@ -1,5 +1,6 @@
 package com.dmm.task.Controller;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -48,11 +49,25 @@ public class MainController {
 		boolean isAdmin = authentication.getAuthorities().stream()
 				.anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")); 
 
-		//カレンダのfrom～to 
-		//※データの取得範囲を当月月初～月末の±１wとする
-		LocalDate fromDate = currentDate.withDayOfMonth(1).minusWeeks(1);
-		LocalDate toDate = currentDate.plusMonths(1).withDayOfMonth(1).minusDays(1).plusWeeks(1);
-			
+		// その月の1日を取得
+		LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
+		// 1日が何曜日か取得 (1: 月曜日, 7: 日曜日)
+		DayOfWeek firstDayOfWeek = firstDayOfMonth.getDayOfWeek();
+		// 前月分の日付を取得
+		LocalDate fromDate = firstDayOfMonth.minusDays(firstDayOfWeek.getValue() % 7);
+
+		// その月のカレンダの最終土曜日算出
+		LocalDate lastDayOfMonth = currentDate.plusMonths(1).withDayOfMonth(1).minusDays(1);
+		// 1日が何曜日か取得 (1: 月曜日, 7: 日曜日)
+		DayOfWeek lastDayOfWeek = lastDayOfMonth.getDayOfWeek();
+		// 初期値は当月末日
+		LocalDate toDate = lastDayOfMonth;
+		// 日曜日の場合は計算しない
+		if (lastDayOfWeek.getValue() != 7) {
+			// 最終日が土曜日になる様に調整
+			toDate = lastDayOfMonth.plusDays(6 - lastDayOfWeek.getValue());
+		}
+
 		List<Tasks> tasks;
 		//権限が管理者かどうかで分岐
 		if (isAdmin) {
