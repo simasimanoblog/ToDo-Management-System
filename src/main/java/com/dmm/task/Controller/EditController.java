@@ -31,8 +31,6 @@ public class EditController {
 		//idに該当するタスクが存在する場合は変数に退避
 		Tasks task = tasksRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid task Id:" + id));
-		//パラメータ.id
-		model.addAttribute("id", id);
 		//タスク
 		model.addAttribute("task", task);
 		// edit.html にレンダリング
