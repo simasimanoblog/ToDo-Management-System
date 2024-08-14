@@ -57,7 +57,7 @@ public class MainController {
 		//権限が管理者かどうかで分岐
 		if (isAdmin) {
 			// 管理者の場合は全てのタスクを取得
-			tasks = tasksRepository.findAllTasks();
+			tasks = tasksRepository.findByDateBetweenAll(fromDate, toDate);
 		} else {
 			// 一般ユーザーの場合はそのユーザーのタスクを取得
 			tasks = tasksRepository.findByDateBetween(fromDate, toDate, username);
