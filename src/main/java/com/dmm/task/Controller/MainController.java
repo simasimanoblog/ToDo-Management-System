@@ -47,7 +47,7 @@ public class MainController {
 		String username = authentication.getName();
 		// 管理者ロールの確認
 		boolean isAdmin = authentication.getAuthorities().stream()
-				.anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN")); 
+				.anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
 
 		// その月の1日を取得
 		LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
@@ -66,10 +66,15 @@ public class MainController {
 		if (lastDayOfWeek.getValue() != 7) {
 			// 最終日が土曜日になる様に調整
 			toDate = lastDayOfMonth.plusDays(6 - lastDayOfWeek.getValue());
+		} else {
+			toDate = lastDayOfMonth.plusDays(6);
 		}
 
+		System.out.println("[DEBUG] start " + fromDate);
+		System.out.println("[DEBUG] end " + toDate);
+
 		List<Tasks> tasks;
-		//権限が管理者かどうかで分岐
+		// 権限が管理者かどうかで分岐
 		if (isAdmin) {
 			// 管理者の場合は全てのタスクを取得
 			tasks = tasksRepository.findByDateBetweenAll(fromDate, toDate);
@@ -78,9 +83,8 @@ public class MainController {
 			tasks = tasksRepository.findByDateBetween(fromDate, toDate, username);
 		}
 		//
-		Map<LocalDate, List<Tasks>> taskMap = tasks.stream()
-				.collect(Collectors.groupingBy(Tasks::getDate));
-		//モデルに追加
+		Map<LocalDate, List<Tasks>> taskMap = tasks.stream().collect(Collectors.groupingBy(Tasks::getDate));
+		// モデルに追加
 		model.addAttribute("matrix", calendar);
 		model.addAttribute("month", formattedMonth);
 		model.addAttribute("prev", currentDate.minusMonths(1).withDayOfMonth(1));
