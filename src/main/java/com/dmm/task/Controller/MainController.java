@@ -70,9 +70,6 @@ public class MainController {
 			toDate = lastDayOfMonth.plusDays(6);
 		}
 
-		System.out.println("[DEBUG] start " + fromDate);
-		System.out.println("[DEBUG] end " + toDate);
-
 		List<Tasks> tasks;
 		// 権限が管理者かどうかで分岐
 		if (isAdmin) {
