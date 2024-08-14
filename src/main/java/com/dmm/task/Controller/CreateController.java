@@ -31,7 +31,6 @@ public class CreateController {
 	public String showCreateForm(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date, Model model) {
 		//パラメータ.日付を初期値としてセット
 		model.addAttribute("date", date);
-		model.addAttribute("task", new CreateForm());
 		// create.html にレンダリング
 		return "create"; 
 	}
