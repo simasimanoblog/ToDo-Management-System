@@ -33,16 +33,6 @@ public class EditController {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid task Id:" + id));
 		//パラメータ.id
 		model.addAttribute("id", id);
-		//DB.タイトル
-		model.addAttribute("title", task.getTitle());
-		//DB.日付
-		model.addAttribute("date", task.getDate());
-		//DB.ユーザー名
-		model.addAttribute("name", task.getName());
-		//DB.タスク内容
-		model.addAttribute("text", task.getText());
-		//画面.実行フラグ
-		model.addAttribute("done", task.getDone());
 		//タスク
 		model.addAttribute("task", task);
 		// edit.html にレンダリング
